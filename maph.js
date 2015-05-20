@@ -13,9 +13,9 @@ var Maph;
 				this.z = initX;
 			}
 			if (arguments.length == 3){
-				this.z = initZ;
 				this.x = initX;
 				this.y = initY;
+				this.z = initZ;
 			}
 		};
 		Vector.prototype.magnitude = function(){
@@ -212,7 +212,25 @@ var Maph;
 		}; 
 
 
-		Matrix.prototype.inverse = function(){};
+		Matrix.prototype.inverse = function(){
+			/*
+				if this matrix is not square, return undefined. 
+				if this matrix has a zero determinant, return undefined. 
+				create a temporary NxM array 
+				for each element of the matrix:
+					create that element's minor submatrix
+					get the minor by taking the determinant of that submatix
+					if the sum of the coordinates of the current element are odd, multiply the minor by -1
+					Put the resulting cofactor into the element's position in the array
+				Then, create a new Matrix from the array 
+				transpose the new matrix to get the adjugate
+				Scalar Multiply each element of the adjugate by 1/the original determinant to get the inverse matrix
+				return the inverse matrix
+				
+			*/
+			
+			
+		};
 		return Matrix;
 		
 	})();
