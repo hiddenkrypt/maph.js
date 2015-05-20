@@ -210,27 +210,53 @@ var Maph;
 			}
 			return out;
 		}; 
-
-
 		Matrix.prototype.inverse = function(){
-			/*
-				if this matrix is not square, return undefined. 
-				if this matrix has a zero determinant, return undefined. 
-				create a temporary NxM array 
-				for each element of the matrix:
-					create that element's minor submatrix
-					get the minor by taking the determinant of that submatix
-					if the sum of the coordinates of the current element are odd, multiply the minor by -1
-					Put the resulting cofactor into the element's position in the array
-				Then, create a new Matrix from the array 
-				transpose the new matrix to get the adjugate
-				Scalar Multiply each element of the adjugate by 1/the original determinant to get the inverse matrix
-				return the inverse matrix
-				
-			*/
-			
-			
+			var majorDeterminant = this.determinant();
+			if( !majorDeterminant ){ return undefined; }
+			var minorArray = [];
+			var determinantFactorArray = [];
+			for (var i=0; i < this.m; i++){
+				var row = [];
+				var determinantFactorRow = [];
+				for(var j=0; j < this.n; j++){
+					row.push(0);
+					if(i===j){
+						determinantFactorRow.push( 1/majorDeterminant );
+					}
+					else{
+						determinantFactorRow.push( 0 );
+					}
+				}
+				minorArray.push(row);
+				determinantFactorArray.push( determinantFactorRow );
+			}		
+			for (var i =0; i < this.m; i++){
+				for(var j=0; j < this.n; j++){
+					var submatrixArray = [];
+					for (var i2 =0; i2 < this.m; i2++){
+						var submatrixRow = [];
+						for(var j2=0; j2 < this.n; j2++){ //O^4, now that's what I call performance!
+							if( i2 != i && j2 != j ){
+								submatrixRow.push( this.matrix[i2][j2] )
+							}
+						}
+						if(submatrixRow.length){submatrixArray.push( submatrixRow );}
+					}
+					var submatrix = new Maph.Matrix( submatrixArray.length, submatrixArray );
+					var minor = submatrix.determinant();
+					if( ( i + j ) % 2 == 0 ){
+						minorArray[i][j] = minor;
+					} else{
+						minorArray[i][j] = -minor;
+					}
+				}
+			}
+			var minorMatrix = new Maph.Matrix( this.m, minorArray );
+			var adjugate = minorMatrix.transpose();
+			var inverse =  adjugate.product( new Maph.Matrix( determinantFactorArray.length , determinantFactorArray ) );
+			return inverse;
 		};
+		
 		return Matrix;
 		
 	})();
