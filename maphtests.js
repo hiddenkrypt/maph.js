@@ -277,7 +277,12 @@ QUnit.test("Divide", function(assert){//scalarDivide: function(scalar) returns v
 
 QUnit.module("Vector Transformations", {
 	setup: function(){
-		a = new Maph.Vector(1,2,3), b = new Maph.Vector(2,3,4), c = new Maph.Vector(92,1,0), d= new Maph.Vector(1), e = new Maph.Vector(), f= new Maph.Vector(.2,-5,-.776);
+		a = new Maph.Vector(1,2,3);
+		b = new Maph.Vector(2,3,4); 
+		c = new Maph.Vector(92,1,0); 
+		d= new Maph.Vector(1);
+		e = new Maph.Vector(); 
+		f= new Maph.Vector(.2,-5,-.776);
 		test = null;
 	},
 	teardown: function(){
@@ -323,47 +328,113 @@ QUnit.test("Inversion", function(assert){//invert: function() returns vector
 	test = f.invert();
 	assert.ok(f.add(test).magnitude() == 0, "<Inversion of Vector F> expected 0, |======| got:"+f.add(test).magnitude());
 });
-QUnit.test("Matrix Transformation", function(assert){//transform: function(matrix) returns vector
-	g = new Maph.Matrix(3);
-	g2 = new Maph.Matrix(4);
-	assert.ok(a.equals(a.transform(g)));
-	assert.ok(a.equals(a.transform(g2)));
-	assert.ok(b.equals(b.transform(g)));
-	assert.ok(b.equals(b.transform(g2)));
-	assert.ok(c.equals(c.transform(g)));
-	assert.ok(c.equals(c.transform(g2)));
-	assert.ok(d.equals(d.transform(g)));
-	assert.ok(d.equals(d.transform(g2)));
-	assert.ok(e.equals(e.transform(g)));
-	assert.ok(e.equals(e.transform(g2)));
-	assert.ok(f.equals(f.transform(g)));
-	assert.ok(f.equals(f.transform(g2)));
-	g = new Maph.Matrix(3, [[1,2,3],[4,5,6],[7,8,9]]);
-	test = a.transform(g);
-	assert.ok(test.equals(new Maph.Vector(30,36,42)));
-	test = b.transform(g);
-	assert.ok(test.equals(new Maph.Vector(42,51,60)));
-	test = c.transform(g);
-	assert.ok(test.equals(new Maph.Vector(96,189,282)));
-	test = d.transform(g);
-	assert.ok(test.equals(new Maph.Vector(12,15,18)));
-	test = e.transform(g);
-	assert.ok(test.equals(new Maph.Vector(0,0,0)));
-	test = f.transform(g);
-	assert.ok(approxEqVec(test, -25.232, -30.808, -36.384, .01));
+QUnit.test( "Matrix Transformation", function( assert ){//transform: function(matrix) returns vector
+	g  = new Maph.Matrix( 3 );
+	g2 = new Maph.Matrix( 4 );
+	assert.ok( a.equals( a.transform( g  ) ), "a * I3 == a" );
+	assert.ok( a.equals( a.transform( g2 ) ), "a * I4 == a"  );
+	assert.ok( b.equals( b.transform( g  ) ), "b * I3 == b"  );
+	assert.ok( b.equals( b.transform( g2 ) ), "b * I4 == b"  );
+	assert.ok( c.equals( c.transform( g  ) ), "c * I3 == c"  );
+	assert.ok( c.equals( c.transform( g2 ) ), "c * I4 == c"  );
+	assert.ok( d.equals( d.transform( g  ) ), "d * I3 == d"  );
+	assert.ok( d.equals( d.transform( g2 ) ), "d * I4 == d"  );
+	assert.ok( e.equals( e.transform( g  ) ), "e * I3 == e"  );
+	assert.ok( e.equals( e.transform( g2 ) ), "e * I4 == e"  );
+	assert.ok( f.equals( f.transform( g  ) ), "f * I3 == f"  );
+	assert.ok( f.equals( f.transform( g2 ) ), "f * I4 == f"  );
+	
+	g = new Maph.Matrix( 3, [[1,2,3],[4,5,6],[7,8,9]] );
+	
+	test = a.transform( g );
+	assert.ok( 
+		test.equals( new Maph.Vector( 30, 36, 42 ) )
+		,"a * [[1,2,3],[4,5,6],[7,8,9]]. Expected [30,36,42].  Got: " + test.print() 
+	);
+	
+	test = b.transform( g );
+	assert.ok( 
+		test.equals( new Maph.Vector( 42, 51, 60 ) )
+		,"b * [[1,2,3],[4,5,6],[7,8,9]]. Expected [42,51,60].  Got: " + test.print() 
+	);
+	
+	test = c.transform( g );
+	assert.ok( 
+		test.equals( new Maph.Vector( 96, 189, 282 ) )
+		,"c * [[1,2,3],[4,5,6],[7,8,9]]. Expected [96,189,282].  Got: " + test.print() 
+	);
+	
+	test = d.transform( g );
+	assert.ok( 
+		test.equals( new Maph.Vector( 12, 15, 18 ) )
+		, "d * [[1,2,3],[4,5,6],[7,8,9]]. Expected [12,15,18].  Got: " + test.print() 
+	);
+	
+	test = e.transform( g );
+	assert.ok( 
+		test.equals( new Maph.Vector( 0, 0, 0 ) )
+		, "e * [[1,2,3],[4,5,6],[7,8,9]]. Expected [0,0,0].  Got: " + test.print() 
+	);
+	
+	test = f.transform( g );
+	assert.ok( 
+		approxEqVec( test, -25.232, -30.808, -36.384, .01 )
+		,"f * [[1,2,3],[4,5,6],[7,8,9]]. Expected approximately [-25.232,-30.808,-36.384], testing with .01 tolerance. Got: " + test.print() 
+	);
+	
 	g2 = new Maph.Matrix(4, [[.5,-2,3,7],[1,1,0,0],[-.5, 73, 0, .6],[-11.77,23,0,1]]);
-	test = a.transform(g2);
-	assert.ok(test.equals(new Maph.Vector()));
-	test = b.transform(g2);
-	assert.ok(test.equals(new Maph.Vector()));
-	test = c.transform(g2);
-	assert.ok(test.equals(new Maph.Vector()));
-	test = d.transform(g2);
-	assert.ok(test.equals(new Maph.Vector()));
-	test = e.transform(g2);
-	assert.ok(test.equals(new Maph.Vector()));
-	test = f.transform(g2);
+	
+	test = a.transform( g2 );
+	assert.ok( 
+		approxEqVec( test, -1.098, 24.693, 0.306, .01 )
+		, "a * [[.5,-2,3,7],[1,1,0,0],[-.5, 73, 0, .6],[-11.77,23,0,1]]. Expected approximately [-1.098,24.693,0.306], testing with .01 tolerance. Got: " + test.print() 
+	);
+	
+	test = b.transform( g2 );
+	assert.ok( 
+		approxEqVec( test, -0.5614, 18.04597, 0.3448, .01 )
+		,"b * [[.5,-2,3,7],[1,1,0,0],[-.5, 73, 0, .6],[-11.77,23,0,1]]. Expected approximately [-0.5614, 18.04597, 0.3448], testing with .01 tolerance. Got: " + test.print() 
+	);
+	
+	test = c.transform( g2 );
+	assert.ok( 
+		approxEqVec( test, 0.05443, -0.2476, 0.4278, .01 )
+		,"c * [[.5,-2,3,7],[1,1,0,0],[-.5, 73, 0, .6],[-11.77,23,0,1]]. Expected approximately [0.05443,-0.2476,0.4278], testing with .01 tolerance. Got: " + test.print() 
+	);
+	assert.ok( 
+		approxEqVec( test, 0.05443, -0.2476, 0.4278, .001 )
+		,"c * [[.5,-2,3,7],[1,1,0,0],[-.5, 73, 0, .6],[-11.77,23,0,1]]. Expected approximately [0.05443,-0.2476,0.4278], testing with .001 tolerance. Got: " + test.print() 
+	);
+	
+	test = d.transform( g2 );
+	assert.ok( 
+		approxEqVec( test, -1.2523, 11.0465, 0.3488, .01 )
+		,"d * [[.5,-2,3,7],[1,1,0,0],[-.5, 73, 0, .6],[-11.77,23,0,1]]. Expected approximately [-1.2523,11.0465,0.3488], testing with .01 tolerance. Got: " + test.print() 
+	);
+	
+	test = e.transform( g2 );
+	assert.ok( 
+		approxEqVec( test, -11.77, 23, 0, .01 )
+		,"e * [[.5,-2,3,7],[1,1,0,0],[-.5, 73, 0, .6],[-11.77,23,0,1]]. Expected approximately [-11.77, 23, 0], testing with .01 tolerance. Got: " + test.print() 
+	);
+	
+	test = f.transform( g2 );
+	assert.ok( 
+		approxEqVec( test, -8.41708, -20.1861, 0.3101, .01 )
+		,"f * [[.5,-2,3,7],[1,1,0,0],[-.5, 73, 0, .6],[-11.77,23,0,1]]. Expected approximately [-8.41708, -20.1861, 0.3101], testing with .01 tolerance. Got: " + test.print() 
+	);
+	
 });
+
+/*[[.5,-2,3,7],[1,1,0,0],[-.5, 73, 0, .6],[-11.77,23,0,1]]);
+
+		a = new Maph.Vector(1,2,3);
+		b = new Maph.Vector(2,3,4); 
+		c = new Maph.Vector(92,1,0); 
+		d= new Maph.Vector(1);
+		e = new Maph.Vector(); 
+		f= new Maph.Vector(.2,-5,-.776);
+*/
 
 QUnit.module("Vector Miscellaneous", {
 	setup: function(){
