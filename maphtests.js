@@ -84,7 +84,7 @@ test("equals()", function(assert){
 	assert.ok(!(b.equals(g)), "B != G");
 	
 });
-QUnit.test("determinant()", function(assert){ // incomplete
+QUnit.test("determinant()", function(assert){
 	assert.equal(a.determinant(), 0, "det(a)");
 	assert.equal(b.determinant(), 1, "det(b)");
 	assert.equal(c.determinant(), 20, "det(c)");
@@ -94,17 +94,17 @@ QUnit.test("determinant()", function(assert){ // incomplete
 	assert.equal(g.determinant(), 1, "det(g)");
 });
 QUnit.test("inverse()", function(assert){ //incomplete
+	assert.ok(a.inverse() === undefined, "inverse(A) expected undefined(determinant 0) |======| got:"+a.inverse());
+	assert.ok(d.inverse() === undefined, "inverse(D) expected undefined(determinant 0) |======| got:"+d.inverse());
 	test = b.inverse()
-	assert.ok(b.equals(test), "The inverse of the identity matrix is the identity matrix. inv(b) = b");
+	assert.ok(b.equals(test), " inverse(I3) = I3");
 	test = c.inverse();
-	assert.ok(approxEqMtx(test, [[-.5,.5,0],[.55,-.65,.2],[.2,.4,-.2]], .01), "<Matrix C Inverse> expected [[-.5,.5,0],[.55,-.65,.2],[.2,.4,-.2]] |======| got:"+JSON.stringify(test.matrix));
+	assert.ok(approxEqMtx(test, [[-.5,.5,0],[.55,-.65,.2],[.2,.4,-.2]], .01), "inverse(C): expected [[-.5,.5,0],[.55,-.65,.2],[.2,.4,-.2]] |======| got:"+JSON.stringify(test.matrix));
 	test = e.inverse();
-	assert.ok(approxEqMtx(test, [[.0534,.2493,-.1219,-.0027],[-.0894,.2493,-0.1219,-0.0027],[0.0005,0.0027,-0.0121,0.0108],[0.0360,-0.4986,1.2439,0.0054]], .0001), "<Matrix E Inverse> expected [[.0534,.2493,-.1219,-.0027],[-.0894,.2493,-0.1219,-0.0027],[0.0005,0.0027,-0.0121,0.0108],[0.0360,-0.4986,1.2439,0.0054]] |======| got:"+JSON.stringify(test.matrix));
+	assert.ok(approxEqMtx(test, [[.0534,.2493,-.1219,-.0027],[-.0894,.2493,-0.1219,-0.0027],[0.0005,0.0027,-0.0121,0.0108],[0.0360,-0.4986,1.2439,0.0054]], .0001), "inverse(E): expected [[.0534,.2493,-.1219,-.0027],[-.0894,.2493,-0.1219,-0.0027],[0.0005,0.0027,-0.0121,0.0108],[0.0360,-0.4986,1.2439,0.0054]] |======| got:"+JSON.stringify(test.matrix));
 	test = f.inverse();
-	assert.ok(approxEqMtx(test, [[-0.0416,-0.3333,0.04166,0.6666],[-0.0833,0.3333,0.0833,-0.6666],[-0.4583,0.1666,-0.0416,0.8333],[1.5833,0.1666,-0.0833,-0.8333]], .0001), "<Matrix E Inverse> expected [[-0.0416,-0.3333,0.04166,0.6666],[-0.0833,0.3333,0.0833,-0.6666],[-0.4583,0.1666,-0.0416,0.8333],[1.5833,0.1666,-0.0833,-0.8333]] |======| got:"+JSON.stringify(test.matrix));
-	assert.ok(d.inverse() === undefined, "<Matrix D Inverse (determinant 0)> expected undefined |======| got:"+d.inverse());
-	assert.ok(a.inverse() === undefined, "<Matrix A Inverse (determinant 0)> expected undefined |======| got:"+d.inverse());
-	assert.ok(g.inverse().equal(g), "The inverse of the identity matrix is the identity matrix. inv(g) = g");
+	assert.ok(approxEqMtx(test, [[-0.0416,-0.3333,0.04166,0.6666],[-0.0833,0.3333,0.0833,-0.6666],[-0.4583,0.1666,-0.0416,0.8333],[1.5833,0.1666,-0.0833,-0.8333]], .0001), "inverse(F): expected [[-0.0416,-0.3333,0.04166,0.6666],[-0.0833,0.3333,0.0833,-0.6666],[-0.4583,0.1666,-0.0416,0.8333],[1.5833,0.1666,-0.0833,-0.8333]] |======| got:"+JSON.stringify(test.matrix));
+	assert.ok(g.inverse().equal(g), "inverse(I4) = I4");
 });
 QUnit.test("transpose()", function(assert){ 
 	test = a.transpose();
