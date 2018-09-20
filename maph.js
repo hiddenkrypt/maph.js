@@ -1,117 +1,88 @@
-var Maph;
-(function Maph(Maph){
-
-	var Vector = (function(){
-		function Vector( initX, initY, initZ ){
-			this.x = 0;
-			this.y = 0;
-			this.z = 0;
-			
-			if(arguments.length == 1){
-				this.x = initX;
-				this.y = initX;
-				this.z = initX;
-			}
-			if (arguments.length == 3){
-				this.x = initX;
-				this.y = initY;
-				this.z = initZ;
-			}
-		};
-		Vector.prototype.magnitude = function(){
-			return Math.sqrt((this.x*this.x) + (this.y*this.y) + (this.z*this.z));
-		};
-		Vector.prototype.invert = function(){
-			return new Vector(
-				-this.x, 
-				-this.y, 
-				-this.z
-			);
-		};
-		Vector.prototype.normalize = function(){
-			if(this.magnitude() != 0){
-				return this.scalarDivide(this.magnitude());
-			}
-			else return this; //pretty		
-		};
-		Vector.prototype.add = function(vector){
-			return new Vector(
-				this.x + vector.x,
-				this.y + vector.y,
-				this.z + vector.z
-			);
-		};
-		Vector.prototype.sub = function(vector){
-			return new Vector(
-				this.x - vector.x,
-				this.y - vector.y,
-				this.z - vector.z
-			);
-		};
-		Vector.prototype.dot = function(vector){
-			return this.x*vector.x+this.y*vector.y+this.z*vector.z;
-		};
-		Vector.prototype.cross = function(vector){
-			return new Vector(
-				this.y*vector.z - this.z*vector.y,
-				this.z*vector.x - this.x*vector.z,
-				this.x*vector.y - this.y*vector.x
-			);
-		};
-		Vector.prototype.equals = function(vector){
-			return this.x == vector.x && this.y==vector.y && this.z==vector.z;
-		};
-		Vector.prototype.eq = function(vector){
-			return this.equals(vector);
-		};
-		Vector.prototype.scalarMultiply = function(scalar){
-			return new Vector(
-				this.x * scalar,
-				this.y * scalar,
-				this.z * scalar
-			);
-		};
-		Vector.prototype.scalarDivide = function(scalar){
-			return new Vector(
-				this.x / scalar,
-				this.y / scalar,
-				this.z / scalar
-			);
-		};
-		Vector.prototype.prettyPrint = function(){
-			return "Vector(x,y,z):["+this.x+","+this.y+","+this.z+"]";
-		};
-		Vector.prototype.print = function(){
-			return "["+this.x+","+this.y+","+this.z+"]";
-		};
-		
-		
-		Vector.prototype.transform = function(matrix){
-			if(matrix.m != 3 && matrix.m != 4){
-				return  undefined;
-			}
-			else if (matrix.m == 3){
-				var xTransformed = (this.x * matrix.matrix[0][0]) + (this.y * matrix.matrix[1][0]) + (this.z * matrix.matrix[2][0]);
-				var yTransformed = (this.x * matrix.matrix[0][1]) + (this.y * matrix.matrix[1][1]) + (this.z * matrix.matrix[2][1]);
-				var zTransformed = (this.x * matrix.matrix[0][2]) + (this.y * matrix.matrix[1][2]) + (this.z * matrix.matrix[2][2]);
-				return new Vector(xTransformed,yTransformed,zTransformed);
-			}
-			else{
-				var xTransformed = (this.x * matrix.matrix[0][0]) + (this.y * matrix.matrix[1][0]) + (this.z * matrix.matrix[2][0]) + matrix.matrix[3][0];
-				var yTransformed = (this.x * matrix.matrix[0][1]) + (this.y * matrix.matrix[1][1]) + (this.z * matrix.matrix[2][1]) + matrix.matrix[3][1];
-				var zTransformed = (this.x * matrix.matrix[0][2]) + (this.y * matrix.matrix[1][2]) + (this.z * matrix.matrix[2][2]) + matrix.matrix[3][2];
-				var w = 		   (this.x * matrix.matrix[0][3]) + (this.y * matrix.matrix[1][3]) + (this.z * matrix.matrix[2][3]) + matrix.matrix[3][3];
-				return new Vector(xTransformed/w, yTransformed/w, zTransformed/w);
-			}
-		};
 
 
-		return Vector;		
-	})();
-	Maph.Vector = Vector;
-	
-	
-	
+var maph = function(){
+  function Vector( initX, initY, initZ ){
+    var newVector = Object.create(vectorPrototype);
+    newVector.x = 0;
+    newVector.y = 0;
+    newVector.z = 0;
+
+    if(arguments.length == 1){
+      newVector.x = initX;
+      newVector.y = initX;
+      newVector.z = initX;
+    }
+    if (arguments.length == 3){
+      newVector.x = initX;
+      newVector.y = initY;
+      newVector.z = initZ;
+    }
+    return newVector;
+  }
+  this.Vector = Vector;
+  var vectorPrototype = {
+    magnitude: function(){
+      return Math.sqrt((this.x*this.x) + (this.y*this.y) + (this.z*this.z));
+    },
+    invert: function(){
+      return new Vector( -this.x, -this.y, -this.z );
+    },
+    normalize: function(){
+      return this.scalarDivide(this.magnitude() || 1);
+    },
+    add: function(vector){
+      return new Vector(this.x + vector.x, this.y + vector.y, this.z + vector.z );
+    },
+    sub: function(vector){
+      return new Vector( this.x - vector.x, this.y - vector.y, this.z - vector.z );
+    },
+    dot: function(vector){
+      return this.x*vector.x+this.y*vector.y+this.z*vector.z;
+    },
+    cross: function(vector){
+      return new Vector( this.y*vector.z - this.z*vector.y, this.z*vector.x - this.x*vector.z, this.x*vector.y - this.y*vector.x );
+    },
+    equals: function(vector){
+      return this.x == vector.x && this.y==vector.y && this.z==vector.z;
+    },
+    eq: function(vector){
+      return this.equals(vector);
+    },
+    scalarMultiply: function(scalar){
+      return new Vector( this.x * scalar, this.y * scalar, this.z * scalar );
+    },
+    scalarDivide: function(scalar){
+      return new Vector( this.x / scalar, this.y / scalar, this.z / scalar );
+    },
+    prettyPrint: function(){
+      return "Vector(x,y,z):["+this.x+","+this.y+","+this.z+"]";
+    },
+    print: function(){
+      return "["+this.x+","+this.y+","+this.z+"]";
+    },
+    transform: function(matrix){
+      var xTransformed = 0;
+      var yTransformed = 0;
+      var zTransformed = 0;
+      if ( matrix.m == 3 ){
+        xTransformed = (this.x * matrix.matrix[0][0]) + (this.y * matrix.matrix[1][0]) + (this.z * matrix.matrix[2][0]);
+        yTransformed = (this.x * matrix.matrix[0][1]) + (this.y * matrix.matrix[1][1]) + (this.z * matrix.matrix[2][1]);
+        zTransformed = (this.x * matrix.matrix[0][2]) + (this.y * matrix.matrix[1][2]) + (this.z * matrix.matrix[2][2]);
+        return new Vector(xTransformed, yTransformed, zTransformed);
+      }
+      if (matrix.m == 4){
+        xTransformed = (this.x * matrix.matrix[0][0]) + (this.y * matrix.matrix[1][0]) + (this.z * matrix.matrix[2][0]) + matrix.matrix[3][0];
+        yTransformed = (this.x * matrix.matrix[0][1]) + (this.y * matrix.matrix[1][1]) + (this.z * matrix.matrix[2][1]) + matrix.matrix[3][1];
+        zTransformed = (this.x * matrix.matrix[0][2]) + (this.y * matrix.matrix[1][2]) + (this.z * matrix.matrix[2][2]) + matrix.matrix[3][2];
+        var w = (this.x * matrix.matrix[0][3]) + (this.y * matrix.matrix[1][3]) + (this.z * matrix.matrix[2][3]) + matrix.matrix[3][3];
+        return new Vector(xTransformed/w, yTransformed/w, zTransformed/w);
+      }
+      else {
+        return undefined;
+      }
+    }
+  };
+
 	var Matrix = (function(){
 		function Matrix(size, arrayIn){//arrayIn optional
 			if(!size || size <1 || (size != size*1) || (size != Math.floor(size))){
@@ -131,7 +102,7 @@ var Maph;
 						else{row.push(0);}
 					}
 					this.matrix.push(row);
-				}			
+				}
 			}
 		};
 		Matrix.prototype.product = function(right){
@@ -183,11 +154,11 @@ var Maph;
 				total += sign*this.matrix[0][top]*reducedMatrix.determinant();
 				sign = -sign;
 			}
-			return total;			
+			return total;
 		};
 		Matrix.prototype.equals = function(test){
 			if(test.n != this.n || test.m != this.m){return false;}
-			
+
 			for(var i=0;i<this.n; i++){
 				for(var j=0; j<this.m; j++){
 					if(this.matrix[i][j] != test.matrix[i][j]){return false;}
@@ -209,16 +180,17 @@ var Maph;
 				out+="]|\n";
 			}
 			return out;
-		}; 
+		};
 		Matrix.prototype.inverse = function(){
 			var majorDeterminant = this.determinant();
 			if( !majorDeterminant ){ return undefined; }
 			var minorArray = [];
 			var determinantFactorArray = [];
-			for (var i=0; i < this.m; i++){
+      var i, i2, j, j2;
+			for ( i = 0; i < this.m; i++){
 				var row = [];
 				var determinantFactorRow = [];
-				for(var j=0; j < this.n; j++){
+				for( j = 0; j < this.n; j++){
 					row.push(0);
 					if(i===j){
 						determinantFactorRow.push( 1/majorDeterminant );
@@ -229,13 +201,13 @@ var Maph;
 				}
 				minorArray.push(row);
 				determinantFactorArray.push( determinantFactorRow );
-			}		
-			for (var i =0; i < this.m; i++){
-				for(var j=0; j < this.n; j++){
+			}
+			for ( i = 0; i < this.m; i++ ){
+				for( j = 0; j < this.n; j++ ){
 					var submatrixArray = [];
-					for (var i2 =0; i2 < this.m; i2++){
+					for ( i2 =0; i2 < this.m; i2++ ){
 						var submatrixRow = [];
-						for(var j2=0; j2 < this.n; j2++){ //O^4, now that's what I call performance!
+						for( j2=0; j2 < this.n; j2++ ){ //O^4, now that's what I call performance!
 							if( i2 != i && j2 != j ){
 								submatrixRow.push( this.matrix[i2][j2] )
 							}
@@ -256,9 +228,12 @@ var Maph;
 			var inverse =  adjugate.product( new Maph.Matrix( determinantFactorArray.length , determinantFactorArray ) );
 			return inverse;
 		};
-		
+
 		return Matrix;
-		
+
 	})();
-	Maph.Matrix = Matrix;
-})(Maph || (Maph = {}));
+	this.Matrix = Matrix;
+};
+
+var Maph = new maph();
+//module.exports = Maph;
